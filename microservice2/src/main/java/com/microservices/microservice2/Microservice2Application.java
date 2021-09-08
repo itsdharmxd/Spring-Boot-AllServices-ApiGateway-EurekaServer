@@ -1,10 +1,13 @@
 package com.microservices.microservice2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +23,12 @@ import javax.websocket.server.ServerApplicationConfig;
 @SpringBootApplication
 @RestController
 @RequestMapping("/messages")
+@RefreshScope
+
 public class Microservice2Application {
+
+	@Value("$(welcome.message)")
+	private  String welcomeMessage;
 
 	@Autowired
 	ServerProperties serverProperties;
@@ -34,7 +42,7 @@ public class Microservice2Application {
 
 		System.out.println("M Service 2 "+serverProperties.getPort());
 
-		return 	new ResponseEntity("Hello from Microservice2", HttpStatus.OK);
+		return 	new ResponseEntity("Hello from Microservice2 "+welcomeMessage, HttpStatus.OK);
 	}
 
 }
